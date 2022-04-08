@@ -1,0 +1,100 @@
+﻿1. Задача:
+
+В файле описание книг:
+     - автор
+     - название
+     - год
+     
+По запросу пользователя вывести: 
+     - все книги: (название, год) заданного автора
+     - всех (авторов, название) по заданному слову в названии
+     - вывести по диапазону лет (авторов, название, год)
+
+2. Сущности:
+    Книга (Book),
+    Список книг (BooksList);
+
+3. Прецеденты:
+    - Загрузка данных, книг из файла.
+    - Ввод команды от пользователя.
+    - Проверка на существование команды от пользователя.
+    - Обработка запроса (команды) от пользователя.
+    - Вывод результата.
+
+4.
+    - Загрузка данных, книг из файла.
+        Участники: BooksList, Manager
+		Обязанности:
+			BooksList:
+				-загрузка книг из файла с указанным именем BooksList Load(String filename)
+            Manager: 
+                - запуск считывания для BooksList.
+    
+    - Ввод запроса пользователя.
+        Участники: Manager,
+		Обязанности:
+            Manager: 
+                - запуск считывания Запроса(команды) от пользователя: string  ReadCommandFromKbd().
+                
+    - Проверка на существование запроса(команды) от пользователя.
+        Участники: Manager,
+		Обязанности:
+            Manager: 
+                - Проверка на существование запроса(команды) от пользователя: bool isHaveCommand(string command).    
+
+    - Обработка команды от пользователя.
+        Участники: Manager, BooksList
+		Обязанности:
+            Manager: 
+                - запуск считывания команды от пользователя и запуск соответствующего сценария работы приложения: void ProcessingCommand(string command).
+                - также запуск методов класса BookList(зависит от выбора пользователя):
+                    BooksList RunCommandFindByAuthor(BooksList list),
+                    BooksList RunCommandFindByName(BooksList list),
+                    BooksList RunCommandFindByYears(BooksList list),
+
+            BooksList
+                - поиск всех книг заданного автора: BooksList findByAuthor(string author);
+                - поиск всех книг по заданному названию книги: BooksList findByName(string name);
+                - поиск всех книг по диапазону лет: BooksList findByYears(int startYear, int endYear);
+
+    - Вывод результата.
+        Участники: BooksList.
+        Обязанности:
+            BooksList: Вывод результата на экран: void Print()
+                       а также вывод результата взависимости от команды (запроса) пользователя: 
+                            void PrintByAuthor(), void PrintByName(), void PrintByYears().
+
+
+5. Описание классов:
+
+class Book 
+{
+    public Book(string author, string name, int year) {}
+
+    public string Author { get {return _author;} }
+    public string Name { get {return _name;} }
+    public string Year { get {return _year.toString();} }
+    
+    private string _name;
+    private string _author;
+    private int _year;
+}
+
+class BooksList
+{
+    static public BooksList Load(string filename) {}
+        
+    public void Add(Book book) {}
+   
+    public BooksList FindByAuthor(string author) {}
+    public BooksList FindByWord(string word) {}
+    public BooksList FindByYears(int startYear, int endYear) {}
+   
+    public void Print(string command) {}
+
+    private void PrintByAuthor() {}
+    private void PrintByName() {}
+    private void PrintByYears() {}
+
+    private List<Book> _bookList = new List<Book>();
+}
